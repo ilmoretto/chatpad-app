@@ -1,6 +1,8 @@
 # Arquivos de desenvolvimento local
 firebase-config-local.js
 index-local.html
+index-test.html
+index-simple.html
 
 # Logs
 *.log
