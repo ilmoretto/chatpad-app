@@ -3,87 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatPad - Chat em Tempo Real</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Debug Firebase - GitHub Pages</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>💬 ChatPad</h1>
-            <div class="room-info" id="roomInfo" style="display: none;">
-                <span id="roomName">Sala: carregando...</span>
-                <span id="onlineCount" class="online-count">👥 0 online</span>
-                <button id="copyLink" class="btn-copy" title="Copiar link da sala">
-                    📋 Copiar Link
-                </button>
-            </div>
-        </header>
-
-        <!-- Tela de entrada na sala -->
-        <div id="roomScreen" class="room-screen">
-            <div class="room-card">
-                <h2>Bem-vindo ao ChatPad!</h2>
-                <p>Crie uma nova sala ou entre em uma existente:</p>
-                
-                <div class="room-options">
-                    <div class="option-section">
-                        <h3>🆕 Criar nova sala</h3>
-                        <input 
-                            type="text" 
-                            id="createRoomInput" 
-                            placeholder="Nome da sala (ex: reuniao-time)" 
-                            maxlength="30"
-                            autocomplete="off"
-                        />
-                        <button id="createRoomBtn" class="btn-primary">Criar Sala</button>
-                        <small>Use apenas letras, números e hífens</small>
-                    </div>
-                    
-                    <div class="divider">OU</div>
-                    
-                    <div class="option-section">
-                        <h3>🚪 Entrar em uma sala</h3>
-                        <input 
-                            type="text" 
-                            id="joinRoomInput" 
-                            placeholder="Nome da sala" 
-                            maxlength="30"
-                            autocomplete="off"
-                        />
-                        <button id="joinRoomBtn" class="btn-secondary">Entrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Área do chat -->
-        <div id="chatArea" class="chat-area" style="display: none;">
-            <div id="messages" class="messages"></div>
-            
-            <div class="input-area">
-                <input 
-                    type="text" 
-                    id="messageInput" 
-                    placeholder="Digite sua mensagem..." 
-                    autocomplete="off"
-                    maxlength="500"
-                />
-                <button id="sendButton" class="btn-send">Enviar</button>
-            </div>
-        </div>
-
-        <footer>
-            <p>💡 Compartilhe a URL desta página para convidar pessoas para a sala • Chat anônimo e seguro</p>
-        </footer>
-    </div>
+    <h1>🔍 Debug Firebase - GitHub Pages</h1>
+    <p>Esta página vai verificar exatamente qual é o problema com o Firebase no GitHub Pages.</p>
+    
+    <div id="results"></div>
+    
+    <button onclick="runTests()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">🧪 Executar Testes</button>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     
-    <!-- Configuração e app -->
+    <!-- Configuração Firebase -->
     <script src="firebase-config.js"></script>
-    <script src="app.js"></script>
+    
+    <script>
+        function addResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${type}`;
+            resultDiv.innerHTML = message;
+            resultsDiv.appendChild(resultDiv);
+        }
+        
+        function runTests() {
+            document.getElementById('results').innerHTML = '';
+            
+            // Teste 1: Firebase SDK
+            addResult('🔄 Verificando Firebase SDK...', 'info');
+            if (typeof firebase === 'undefined') {
+                addResult('❌ Firebase SDK não está carregado!', 'error');
+                return;
+            }
+            addResult('✅ Firebase SDK carregado com sucesso', 'success');
+            
+            // Teste 2: Configuração Firebase
+            addResult('🔄 Verificando configuração Firebase...', 'info');
+            try {
+                const app = firebase.app();
+                const config = app.options;
+                
+                addResult('✅ Firebase app inicializado', 'success');
+                addResult(`<pre>Configuração carregada:
+apiKey: ${config.apiKey ? (config.apiKey.length > 10 ? config.apiKey.substring(0, 10) + '...' : config.apiKey) : 'NÃO DEFINIDO'}
+authDomain: ${config.authDomain || 'NÃO DEFINIDO'}
+databaseURL: ${config.databaseURL || 'NÃO DEFINIDO'}
+projectId: ${config.projectId || 'NÃO DEFINIDO'}
+storageBucket: ${config.storageBucket || 'NÃO DEFINIDO'}
+messagingSenderId: ${config.messagingSenderId || 'NÃO DEFINIDO'}
+appId: ${config.appId ? (config.appId.length > 10 ? config.appId.substring(0, 10) + '...' : config.appId) : 'NÃO DEFINIDO'}</pre>`, 'info');
+                
+                // Verificar se alguma variável não foi substituída
+                const configStr = JSON.stringify(config);
+                if (configStr.includes('${')) {
+                    addResult('❌ PROBLEMA: Variáveis não foram substituídas pelo GitHub Actions!', 'error');
+                    addResult('🔧 Solução: Verificar se os secrets estão configurados corretamente no GitHub', 'info');
+                } else {
+                    addResult('✅ Todas as variáveis foram substituídas corretamente', 'success');
+                }
+                
+            } catch (error) {
+                addResult(`❌ Erro na configuração Firebase: ${error.message}`, 'error');
+            }
+            
+            // Teste 3: Autenticação
+            addResult('🔄 Testando autenticação anônima...', 'info');
+            auth.signInAnonymously()
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    addResult(`✅ Autenticação bem-sucedida! User ID: ${user.uid}`, 'success');
+                    
+                    // Teste 4: Database
+                    addResult('🔄 Testando acesso ao database...', 'info');
+                    return database.ref('rooms').limitToFirst(1).once('value');
+                })
+                .then((snapshot) => {
+                    addResult('✅ Acesso ao database bem-sucedido!', 'success');
+                    addResult('🎉 Todos os testes passaram! O Firebase está funcionando.', 'success');
+                })
+                .catch((error) => {
+                    addResult(`❌ Erro: ${error.code} - ${error.message}`, 'error');
+                    
+                    if (error.code === 'auth/api-key-not-valid') {
+                        addResult('🔧 API Key inválida. Verifique a configuração no Firebase Console.', 'info');
+                    } else if (error.code === 'auth/project-not-found') {
+                        addResult('🔧 Projeto não encontrado. Verifique o Project ID.', 'info');
+                    } else if (error.code === 'permission-denied') {
+                        addResult('🔧 Problema de permissão. Verifique as regras do database.', 'info');
+                    }
+                });
+        }
+        
+        // Executar testes automaticamente ao carregar
+        window.addEventListener('load', () => {
+            setTimeout(runTests, 1000);
+        });
+    </script>
 </body>
 </html>
