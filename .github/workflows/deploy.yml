@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+﻿name: Deploy to GitHub Pages
 
 on:
   push:
@@ -21,25 +21,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Replace Firebase Config
+      - name: Create Firebase Config
         run: |
-          echo "🔧 Substituindo variáveis Firebase..."
-          echo "📁 Conteúdo antes da substituição:"
+          echo "Criando firebase-config.js..."
+          cat > firebase-config.js << EOF
+          const firebaseConfig = {
+            apiKey: "${{ secrets.FIREBASE_API_KEY }}",
+            authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN }}",
+            databaseURL: "${{ secrets.FIREBASE_DATABASE_URL }}",
+            projectId: "${{ secrets.FIREBASE_PROJECT_ID }}",
+            storageBucket: "${{ secrets.FIREBASE_STORAGE_BUCKET }}",
+            messagingSenderId: "${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}",
+            appId: "${{ secrets.FIREBASE_APP_ID }}"
+          };
+          firebase.initializeApp(firebaseConfig);
+          const auth = firebase.auth();
+          const database = firebase.database();
+          EOF
           cat firebase-config.js
-          
-          # Substituir variáveis
-          sed -i "s/\${FIREBASE_API_KEY}/${{ secrets.FIREBASE_API_KEY }}/g" firebase-config.js
-          sed -i "s/\${FIREBASE_AUTH_DOMAIN}/${{ secrets.FIREBASE_AUTH_DOMAIN }}/g" firebase-config.js
-          sed -i "s|\${FIREBASE_DATABASE_URL}|${{ secrets.FIREBASE_DATABASE_URL }}|g" firebase-config.js
-          sed -i "s/\${FIREBASE_PROJECT_ID}/${{ secrets.FIREBASE_PROJECT_ID }}/g" firebase-config.js
-          sed -i "s/\${FIREBASE_STORAGE_BUCKET}/${{ secrets.FIREBASE_STORAGE_BUCKET }}/g" firebase-config.js
-          sed -i "s/\${FIREBASE_MESSAGING_SENDER_ID}/${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}/g" firebase-config.js
-          sed -i "s/\${FIREBASE_APP_ID}/${{ secrets.FIREBASE_APP_ID }}/g" firebase-config.js
-          
-          echo "📁 Conteúdo após a substituição:"
-          cat firebase-config.js
-          
-          echo "✅ Substituição concluída"
       
       - name: Setup Pages
         uses: actions/configure-pages@v4
