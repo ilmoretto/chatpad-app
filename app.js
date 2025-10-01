@@ -274,7 +274,7 @@ function displayMessage(message) {
     
     const color = message.color || '#333';
     const isOwnMessage = message.userId === currentUser;
-    const authorLabel = isOwnMessage ? 'Você' : 'Anônimo';
+    const authorLabel = isOwnMessage ? 'Enviado' : 'Recebido';
     
     messageDiv.innerHTML = `
         <div class="message-header">
