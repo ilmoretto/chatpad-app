@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Config - GitHub Pages</title>
+</head>
+<body>
+    <h1>🔍 Debug Configuração Firebase</h1>
+    <p>Verificando o arquivo firebase-config.js gerado pelo GitHub Actions...</p>
+    
+    <h2>📁 Conteúdo do firebase-config.js:</h2>
+    <pre id="configContent">Carregando...</pre>
+    
+    <h2>🔧 Configuração Atual:</h2>
+    <pre id="currentConfig">Carregando...</pre>
+    
+    <script src="firebase-config.js"></script>
+    <script>
+        // Mostrar o que foi realmente gerado
+        fetch('firebase-config.js')
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('configContent').textContent = text;
+            })
+            .catch(error => {
+                document.getElementById('configContent').textContent = 'Erro ao carregar: ' + error;
+            });
+        
+        // Mostrar configuração atual se existir
+        if (typeof firebase !== 'undefined') {
+            try {
+                const app = firebase.app();
+                const config = app.options;
+                document.getElementById('currentConfig').textContent = JSON.stringify(config, null, 2);
+            } catch (error) {
+                document.getElementById('currentConfig').textContent = 'Erro: ' + error.message;
+            }
+        } else {
+            document.getElementById('currentConfig').textContent = 'Firebase não carregado';
+        }
+    </script>
+</body>
+</html>
