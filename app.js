@@ -276,16 +276,21 @@ function displayMessage(message) {
     const isOwnMessage = message.userId === currentUser;
     const authorLabel = isOwnMessage ? 'Você' : 'Alguém';
     
+    // Adiciona classe para layout WhatsApp
+    messageDiv.className = `message ${isOwnMessage ? 'message-sent' : 'message-received'}`;
+    
     messageDiv.innerHTML = `
-        <div class="message-header">
-            <span class="message-author">
-                <span class="user-icon" style="background-color: ${color}"></span>
-                ${escapeHtml(authorLabel)}
-            </span>
-            <span class="message-time">${time}</span>
-        </div>
-        <div class="message-content" style="border-left-color: ${color}">
-            ${escapeHtml(message.content)}
+        <div class="message-bubble">
+            <div class="message-header">
+                <span class="message-author">
+                    <span class="user-icon" style="background-color: ${color}"></span>
+                    ${escapeHtml(authorLabel)}
+                </span>
+                <span class="message-time">${time}</span>
+            </div>
+            <div class="message-content">
+                ${escapeHtml(message.content)}
+            </div>
         </div>
     `;
     
