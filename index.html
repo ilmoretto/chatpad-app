@@ -2,19 +2,33 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatPad - Chat em Tempo Real v2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#1e3a8a">
+    <title>ChatPad - Chat em Tempo Real</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>ChatPad</h1>
+            <div class="header-left">
+                <img src="icon.svg" alt="ChatPad" class="app-icon">
+                <h1>ChatPad</h1>
+            </div>
             <div class="room-info" id="roomInfo" style="display: none;">
                 <span id="roomName">Sala: carregando...</span>
-                <button id="copyLink" class="btn-copy" title="Copiar link da sala">
-                    Copiar Link
-                </button>
+                <div class="header-buttons">
+                    <button id="copyLink" class="btn-copy" title="Copiar link da sala">
+                        Copiar Link
+                    </button>
+                    <button id="leaveRoom" class="btn-leave" title="Sair da sala">
+                        Sair
+                    </button>
+                </div>
             </div>
         </header>
 
@@ -65,7 +79,11 @@
                     id="messageInput" 
                     placeholder="Digite sua mensagem..." 
                     autocomplete="off"
+                    autocapitalize="sentences"
+                    autocorrect="on"
+                    spellcheck="true"
                     maxlength="500"
+                    enterkeyhint="send"
                 />
                 <button id="sendButton" class="btn-send">Enviar</button>
             </div>

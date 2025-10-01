@@ -78,6 +78,9 @@ function setupEventListeners() {
     // Copiar link
     copyLinkBtn.addEventListener('click', copyRoomLink);
     
+    // Sair da sala
+    document.getElementById('leaveRoom').addEventListener('click', leaveRoom);
+    
     // Detectar mudanças na URL
     window.addEventListener('hashchange', () => {
         location.reload();
@@ -320,9 +323,30 @@ function copyRoomLink() {
         
         copyLinkBtn.textContent = '✅ Copiado!';
         setTimeout(() => {
-            copyLinkBtn.textContent = '📋 Copiar Link';
+            copyLinkBtn.textContent = 'Copiar Link';
         }, 2000);
     });
+}
+
+// Sair da sala
+function leaveRoom() {
+    if (confirm('Tem certeza que deseja sair da sala?')) {
+        // Limpar dados da sala
+        if (currentRoom) {
+            // Remover usuário da lista de usuários online
+            database.ref(`rooms/${currentRoom}/users/${currentUser}`).remove();
+        }
+        
+        // Limpar variáveis globais
+        currentRoom = null;
+        currentUser = null;
+        
+        // Limpar URL
+        window.location.hash = '';
+        
+        // Recarregar página para voltar à tela inicial
+        location.reload();
+    }
 }
 
 // Mostrar erro
